@@ -13,8 +13,9 @@ Backdoor attacks have emerged as the main threat to the safe deployment of DNNs.
 
 We have randomly sampled a subset of the backdoored model from the Trojan Detection Challenge [4]. You can download from here [link].
 
-`code xample of NC：` 
+### Code Example of NC
 
+For a quick start, we provide an example of trojan model detection by NC. 
 
 ### Reference 
 
