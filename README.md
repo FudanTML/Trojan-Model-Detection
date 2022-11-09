@@ -40,7 +40,7 @@ def reverse_engineer(model_id, para_lamda):
     list_ = []
     count = [0]*param["num_classes"]
     threshold = int(param["ratio"]*len(train_dataset))
-    for i in train_dataset:# 这段仅是用来调整个别类别的数量
+    for i in train_dataset:
         if count[i[1]] < threshold:
             list_.append(i)
             count[i[1]] += 1
