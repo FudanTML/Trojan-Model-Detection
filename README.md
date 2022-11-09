@@ -15,7 +15,72 @@ We have randomly sampled a subset of the backdoored model from the Trojan Detect
 
 ### Example of NC
 
-For a quick start, we have provided an example of trojan model detection by NC as follows. 
+For a quick start, we have provided an example of trojan model detection by NC in folder. 
+
+```
+def reverse_engineer(model_id, para_lamda):
+    param = {
+        "dataset": "cifar10",
+        "Epochs": 20,
+        "batch_size": 64,
+        "lamda": para_lamda,
+        "num_classes": 10,
+        "image_size": (32, 32),
+        "ratio": 0.005
+    }
+    model = torch.load("/media/server/8961e245-931a-4871-9f74-9df58b1bd938/server/lyg/tdc-starter-kit-main/tdc_datasets/target_label_prediction/train/id-"+str(model_id)+"/model.pt").to(device)
+
+    
+    tf_train = torchvision.transforms.Compose([  
+        torchvision.transforms.ToTensor(),
+    ])
+    
+    train_dataset = torchvision.datasets.CIFAR10(root='/media/server/8961e245-931a-4871-9f74-9df58b1bd938/server/lyg/CIFAR10_GTSRB_dynamic_and_flooding/flooding/data', train=False, download=False)
+
+    list_ = []
+    count = [0]*param["num_classes"]
+    threshold = int(param["ratio"]*len(train_dataset))
+    for i in train_dataset:# 这段仅是用来调整个别类别的数量
+        if count[i[1]] < threshold:
+            list_.append(i)
+            count[i[1]] += 1
+    train_dataset = list_
+    count = [0]*param["num_classes"]
+
+    train_dataset = augDataset_npy(full_dataset=train_dataset, transform=tf_train)
+    train_loader = DataLoader(
+        train_dataset,
+        batch_size = param["batch_size"],
+        shuffle=False,
+        num_workers=0,
+        pin_memory=False,
+)
+    
+
+    for label in range(param["num_classes"]):
+        trigger, mask = train(model, label, train_loader, param)
+        norm_list.append(mask)
+
+        trigger = trigger.cpu().detach().numpy()
+        trigger = np.transpose(trigger, (1,2,0))
+        plt.axis("off")
+        plt.imshow(trigger)
+        plt.savefig('mask/trigger_{}.png'.format(label), bbox_inches='tight', pad_inches=0.0)
+
+        mask = mask.cpu().detach().numpy()
+        plt.axis("off")
+    
+    l1_norm_list = norm_list[-param["num_classes"]:]
+    list_target = [0]*param["num_classes"]
+    for i in range(len(list_target)):
+        list_target[i] = i
+    flag_label = outlier_detection(l1_norm_list, list_target)
+        
+    
+    print("flag label:"+str(flag_label))
+    return flag_label
+```
+
 
 ### Reference 
 
