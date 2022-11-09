@@ -11,7 +11,8 @@ Backdoor attacks have emerged as the main threat to the safe deployment of DNNs.
 
 ### Trojan Model Zoo
 
-We have randomly sampled a subset of the backdoored model from the Trojan Detection Challenge [4]. You can download from here [link].
+We have randomly sampled a subset of the backdoored model from the Trojan Detection Challenge [4]. You can download from [here](链接：https://pan.baidu.com/s/1bzhw_lod9yLhy4xRwtM_qQ 
+提取码：1314).
 
 ### Example of NC
 
